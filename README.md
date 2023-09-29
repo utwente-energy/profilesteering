@@ -1,15 +1,17 @@
 # Profile Steering - Light
 
-Simple implementation of the Profile Steering algorithm in Python. Utilizes device optimization code from DEMKit: https://raw.githubusercontent.com/utwente-energy/demkit/
+Simple implementation of the Profile Steering algorithm in Python. Utilizes device optimization code from DEMKit: https://github.com/utwente-energy/demkit/
 
 ## References
 
+Background reading materials related to the code:
 - Profile Steering paper: https://ris.utwente.nl/ws/portalfiles/portal/5480391/ProfileSteering.pdf
 - Algorithms: https://ris.utwente.nl/ws/portalfiles/portal/12378855/thesis_T_van_der_Klauw.pdf
 - Interactive demo: https://foreman.virt.dacs.utwente.nl/~gerardsmet/vis/ps.html
 
 ## Citing
 
+To cite the Profile Steering algorithms, please use:
 M. E. T. Gerards, H. A. Toersche, G. Hoogsteen, T. van der Klauw, J. L. Hurink, and G. J. M. Smit, "Demand side management using profile steering," In PowerTech, 2015 IEEE, Eindhoven, 6 pages, June 2015.
 
 ## Running
