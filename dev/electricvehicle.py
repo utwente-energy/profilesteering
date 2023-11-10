@@ -74,11 +74,11 @@ class ElectricVehicle():
 			# bufferPlanning(	self, desired, targetSoC, initialSoC, capacity, demand, chargingPowers, powerMin = 0, powerMax = 0,
 			#					powerLimitsLower = [], powerLimitsUpper = [], reactivePower = False, prices = [], profileWeight = 1)
 	
-			profile = self.opt.bufferPlanning(	p_m,
+			profile = self.opt.bufferPlanning(	p_m[self.startTime:self.endTime],
 												self.capacity, 
 												self.initialSoC,
 												self.capacity,
-												[0] * len(p_m), # Static losses, not used
+												[0] * len(p_m[self.startTime:self.endTime]), # Static losses, not used
 												[], self.powers[0], self.powers[1],
 												[], [],
 												False,
@@ -91,7 +91,7 @@ class ElectricVehicle():
 			# Function prototype: 
 			# discreteBufferPlanningPositive(self, desired, chargeRequired, chargingPowers, powerLimitsUpper = [], prices = None, beta = 1):	
 			profile = self.opt.discreteBufferPlanningPositive(	p_m[self.startTime:self.endTime],						# We only need the section at which the EV is connected
-														self.chargeRequest * int(3600/self.intervalLength), 	# We need to convert this in "wattTau" instead of WattHours.
+														self.chargeRequest * int(3600/self.intervalLength), 			# We need to convert this in "wattTau" instead of WattHours.
 														self.powers,
 														[],
 														None,

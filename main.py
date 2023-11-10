@@ -59,7 +59,7 @@ for i in range(0,10):
 # Add some EVs
 for i in range(0,10):
 	devices.append(ElectricVehicle())
-	
+
 # Add some Heatpumps
 for i in range(0,10):
 	devices.append(HeatPump())

@@ -40,8 +40,14 @@ class HeatPump():
 			self.heatdemand.append(self.max_power*1.5*random.random())
 	
 		# Create an initial planning. 
-		# Since we do not know what the rest of the appliances do, we can just fill it with zeroes:
-		self.profile = [0]*len(p) 
+		# Need to set the initial profile to get the correct length:
+		self.profile = [0] * len(p)
+		
+		# We can use the planning function in a local fashion with a zero profile to get a plan
+		# Another option would be to use a greedy strategy to plan the profile with greedy charging: asap
+		self.plan(p)	# Create an initial plan
+		self.accept()	# Accpe tit, such that self.profile is set
+		
 		return list(self.profile)
 			
 	def plan(self, d): 
@@ -57,7 +63,7 @@ class HeatPump():
 													self.initialSoC, 
 													self.initialSoC,
 													self.capacity,
-													self.heatdemand, # Static losses, not used
+													self.heatdemand, 
 													[], self.min_power, self.max_power,
 													[], [],
 													False,
@@ -67,6 +73,7 @@ class HeatPump():
 				
 		# Calculate the improvement by this device:
 		e_m = np.linalg.norm(np.array(self.profile)-np.array(p_m)) - np.linalg.norm(np.array(self.candidate)-np.array(p_m))
+	
 		
 		# Return the improvement
 		# print("Improvement: ", self, e_m)

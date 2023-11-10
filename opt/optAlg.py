@@ -530,7 +530,6 @@ class OptAlg:
 		remainingCharge = chargeRequired
 
 		if efficiency is None:
-			assert (False)
 			efficiency = [1] * len(chargingPowers)
 		else:
 			assert (len(efficiency) == len(chargingPowers))
