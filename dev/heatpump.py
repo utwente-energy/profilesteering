@@ -46,7 +46,7 @@ class HeatPump():
 		# We can use the planning function in a local fashion with a zero profile to get a plan
 		# Another option would be to use a greedy strategy to plan the profile with greedy charging: asap
 		self.plan(p)	# Create an initial plan
-		self.accept()	# Accpe tit, such that self.profile is set
+		self.accept()	# Accept it, such that self.profile is set
 		
 		return list(self.profile)
 			
