@@ -22,7 +22,7 @@ class ElectricVehicle():
 		self.profile = []	# x_m in the PS paper
 		self.candidate = []	# ^x_m in the PS paper
 		
-		# Intervallenght in seonds
+		# Intervallength in seonds
 		self.intervalLength = 900
 		
 		# Device specific params
