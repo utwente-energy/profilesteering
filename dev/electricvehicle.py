@@ -22,13 +22,10 @@ class ElectricVehicle():
 		self.profile = []	# x_m in the PS paper
 		self.candidate = []	# ^x_m in the PS paper
 		
-		# Intervallength in seonds
-		self.intervalLength = 900
-		
 		# Device specific params
-		self.capacity = 	40000	# Wh
+		self.capacity = 	10000	# in Wh
 		
-		self.powers = 	[0, 3000, 4000, 5000, 6000, 7000, 8000] # Charging powers supported by the EV in Watt
+		self.powers = 	[0, 4140, 4830, 5520, 6210, 6900, 7590, 8280, 8970, 9660, 10350, 11040] # Charging powers supported by the EV in W. This is default 11kW 3 phase charging, allowed from 6A min (or off)
 			# NOTE: In continuous mode it will select only the first and last element, any power inbetween is possible
 			# NOTE: V2G is supported!
 			
@@ -40,12 +37,17 @@ class ElectricVehicle():
 		self.startTime = random.randint(7*4, 12*4)	# Random connection time (15 minute intervals used here)
 		self.endTime = random.randint(15*4, 22*4)	# Random departure time (15 minute intervals used here)
 		
+		self.tau = 4
+		# Note: In our algorithms we simplify the energy calculations from Wh to what we refer as Wtau using a linear translation.
+		# Here, tau is defined as the number of discrete time intervals within an hour, in the base example this is 4, as we simulat ein 15 minute intervals
+		# This eases the calculations, as charging with 1W during one interval will result in a 1Wtau increase in stored energy (instead of 0.25Wh)
+
 		# Energy demand by the EV
-		self.chargeRequest = random.randint(4000, 22000) # Wh
+		self.chargeRequest = random.randint(1000, 10000) # Wh
 		self.initialSoC = self.capacity - self.chargeRequest
 		assert(self.initialSoC >= 0)
 		# Note: Ensure that the EV can be charged in time! (time in hours * maximum charge power!)
-		
+
 		# Importing the optimization library
 		self.opt = opt.optAlg.OptAlg()
 	
@@ -75,9 +77,9 @@ class ElectricVehicle():
 			#					powerLimitsLower = [], powerLimitsUpper = [], reactivePower = False, prices = [], profileWeight = 1)
 	
 			profile = self.opt.bufferPlanning(	p_m[self.startTime:self.endTime],
-												self.capacity, 
-												self.initialSoC,
-												self.capacity,
+												self.capacity*self.tau, 	# Here we have to convert from Wh to Wtau. Note that we do not output the SoC ourselves. This can be calculated (using summation) using the power profile, which is in W.
+												self.initialSoC*self.tau, 	# Here we have to convert from Wh to Wtau. Note that we do not output the SoC ourselves. This can be calculated (using summation) using the power profile, which is in W.
+												self.capacity*self.tau, 	# Here we have to convert from Wh to Wtau. Note that we do not output the SoC ourselves. This can be calculated (using summation) using the power profile, which is in W.
 												[0] * len(p_m[self.startTime:self.endTime]), # Static losses, not used
 												[], self.powers[0], self.powers[1],
 												[], [],
@@ -91,7 +93,7 @@ class ElectricVehicle():
 			# Function prototype: 
 			# discreteBufferPlanningPositive(self, desired, chargeRequired, chargingPowers, powerLimitsUpper = [], prices = None, beta = 1):	
 			profile = self.opt.discreteBufferPlanningPositive(	p_m[self.startTime:self.endTime],						# We only need the section at which the EV is connected
-														self.chargeRequest * int(3600/self.intervalLength), 			# We need to convert this in "wattTau" instead of WattHours.
+														self.chargeRequest*self.tau, 	# Here we have to convert from Wh to Wtau. Note that we do not output the SoC ourselves. This can be calculated (using summation) using the power profile, which is in W.
 														self.powers,
 														[],
 														None,

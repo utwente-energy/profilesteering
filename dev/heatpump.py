@@ -23,11 +23,16 @@ class HeatPump():
 		self.candidate = []	# ^x_m in the PS paper
 		
 		# Device specific params
-		self.capacity = 	14000	# in Wtau, converted in electricity equivalent
-		self.max_power = 	5000	# in W, electricity
-		self.min_power = 	0
+		self.capacity = 	3500	# in Wh, hot water buffer storace converted in electricity equivalent
+		self.max_power = 	3700	# in W, electricity
+		self.min_power = 	0		# in W, electricity
 		self.initialSoC = 	0.5*self.capacity
-			
+
+		# Wh to WTau conversion rate:
+		self.tau = 4
+		# Note: In our algorithms we simplify the energy calculations from Wh to what we refer as Wtau using a linear translation.
+		# Here, tau is defined as the number of discrete time intervals within an hour, in the base example this is 4, as we simulat ein 15 minute intervals
+		# This eases the calculations, as charging with 1W during one interval will result in a 1Wtau increase in stored energy (instead of 0.25Wh)
 		
 		# Importing the optimization library
 		self.opt = opt.optAlg.OptAlg()
@@ -60,9 +65,9 @@ class HeatPump():
 		#					powerLimitsLower = [], powerLimitsUpper = [], reactivePower = False, prices = [], profileWeight = 1)
 	
 		self.candidate = self.opt.bufferPlanning(	p_m,
-													self.initialSoC, 
-													self.initialSoC,
-													self.capacity,
+													self.initialSoC*self.tau, 	# Here we have to convert from Wh to Wtau. Note that we do not output the SoC ourselves. This can be calculated (using summation) using the power profile, which is in W.
+													self.initialSoC*self.tau,	# Here we have to convert from Wh to Wtau. Note that we do not output the SoC ourselves. This can be calculated (using summation) using the power profile, which is in W.
+													self.capacity*self.tau,		# Here we have to convert from Wh to Wtau. Note that we do not output the SoC ourselves. This can be calculated (using summation) using the power profile, which is in W.
 													self.heatdemand, 
 													[], self.min_power, self.max_power,
 													[], [],
